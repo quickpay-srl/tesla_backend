@@ -1,0 +1,117 @@
+#--------------------------------------------------
+# CONFIG SSL
+#--------------------------------------------------
+server.port = 9080
+
+#server.ssl.key-store=classpath:localhost.p12
+#server.ssl.key-store-password=micontrasenia
+#server.ssl.key-alias=tomcat
+
+#security.require-ssl=true
+#trust-store=classpath:localhostjks.jks
+#trust-store-password=holamundo
+
+# ----------------------------------------
+# CORE JPA
+# ----------------------------------------
+# spring.datasource.url=jdbc:postgresql://localhost:5432/exacta_tesla
+spring.datasource.url=jdbc:postgresql://localhost:5432/exacta_tesla
+spring.datasource.username=postgres
+spring.datasource.password=root
+#spring.datasource.url=${DATABASE_URL}
+#spring.datasource.username=${DATABASE_USERNAME}
+#spring.datasource.password=${DATABASE_PASSWORD}
+
+
+
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+#spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# ----------------------------------------
+# CORE SPRING BATCH
+# ----------------------------------------
+spring.batch.initialize-schema=always
+spring.batch.job.enabled=false
+spring.jpa.properties.hibernate.jdbc.batch_size=10
+spring.jpa.properties.hibernate.order_inserts=true
+
+# ----------------------------------------
+# F. COMPUTARIZADA YA NO SE UASARA
+# ----------------------------------------
+host.facturacion.computarizada=https://localhost:2020
+user.facturacion.computarizada=exacta.tesla_facturacion
+password.facturacion.computarizada=$3Xacta.T3sla.C0m.B0.2021@$
+
+# ----------------------------------------
+# F. ELECTORNICA
+# ----------------------------------------
+host.facturacion.electronica=http://localhost:9085
+
+
+# ----------------------------------------
+# ALLOWED ORIGINS
+# ----------------------------------------
+proy.allowed.origins=https://localhost:8080
+# proy.allowed.origins=*
+
+# ----------------------------------------
+# UPLOAD DOCUMENTOS
+# ----------------------------------------
+tesla.path.files-debts=E:/Empresa/ServidorArchivos/
+tesla.path.files-report=I:/opt/aplicaciones/exacta_qa/report
+tesla.path.server-files=http://127.0.0.1:8887
+tesla.path.logos=E:/Empresa/ServidorArchivos/Logos
+tesla.path.files-payments=C:/Users/aCallejas/Desktop/PROYECTO/TESLA/files_payments/
+tesla.path.logos.abonos=C:/Users/aCallejas/Desktop/PROYECTO/TESLA/logos_abonos/servicio_productos/
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
+
+# ----------------------------------------
+# EMAIL CONFIGURATION
+# ----------------------------------------
+#spring.mail.default-encoding=UTF-8
+#spring.mail.protocol=smtp
+#spring.mail.host=localhost
+#spring.mail.port=25
+#tesla.mail.correoEnvio=tesla@exacta.com.bo
+
+# ----------------------------------------
+# EMAIL CONFIGURATION
+# ----------------------------------------
+spring.mail.default-encoding=UTF-8
+spring.mail.protocol=smtp
+spring.mail.host=localhost
+spring.mail.port=25
+tesla.mail.correoEnvio=notificaciones@quickpay.com.bo
+
+#--------------------------------------------------
+# LOGS SISTEMAS
+#--------------------------------------------------
+logging.config=classpath:logback-spring.xml
+logging.level.root=WARN
+logging.level.org.springframework.web=DEBUG
+logging.level.org.hibernate=ERROR
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+logging.pattern.file= "%d{yyyy-MM-dd } [%thread] %-5level %logger{36} - %msg%n"
+logging.file.name =C:/Users/aCallejas/Desktop/PROYECTO/TESLA/logs/app.log
+
+#--------------------------------------------------
+# CONFIG SISTEMAS
+#--------------------------------------------------
+tesla.url.tesla=https://localhost:8080
+
+#https://readlearncode.com/maven/rebuild-a-maven-repository-in-3-steps/
+
+
+
+# ----------------------------------------
+# GENERA QR
+# ----------------------------------------
+sip.host=https://dev-sip.mc4.com.bo:8443
+sip.apikey.servicio.login = df00fd4e2d858836dd22c95b6b30fa7299ee665ba298bc1b
+sip.apikey.servicio.genera.qr = 2705bfe79aa58aaa42f5f3c2402d01a485b9ddecf34880ff
+sip.username = alvaroq
+sip.password = 91330402023*aA2024
