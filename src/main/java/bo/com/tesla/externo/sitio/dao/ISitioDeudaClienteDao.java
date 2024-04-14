@@ -27,7 +27,7 @@ public interface ISitioDeudaClienteDao extends JpaRepository<DeudaClienteEntity,
     //Long deudaClienteId, String tipoServicio, String servicio, String periodo, java.math.BigDecimal cantidad,
     //String concepto, BigDecimal montoUnitario, BigDecimal subTotal
     @Query("select new bo.com.tesla.externo.sitio.dto.SitioDeudaClienteDetDto( "
-            + "d.deudaClienteId, d.tipoServicio, d.servicio, d.periodo, d.cantidad,d.concepto,sum(d.montoUnitario), sum(d.subTotal)) "
+            + "d.deudaClienteId,d.nroRegistro, d.tipoServicio, d.servicio, d.periodo, d.cantidad,d.concepto,sum(d.montoUnitario), sum(d.subTotal)) "
             + " from DeudaClienteEntity d "
             + " where d.archivoId.entidadId.entidadId = :entidadId "
             + " and d.archivoId.entidadId.estado = 'ACTIVO' "

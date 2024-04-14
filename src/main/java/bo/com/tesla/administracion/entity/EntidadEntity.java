@@ -28,6 +28,13 @@ public class EntidadEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "nombre_comercial", nullable = false, length = 200)
     private String nombreComercial;
+
+    @Basic(optional = true)
+    @Column(name = "subdominio_empresa", nullable = true, length = 200)
+    private String subdominioEmpresa;
+
+
+
     @Basic(optional = false)
     @Column(nullable = false, length = 200)
     private String direccion;
@@ -438,7 +445,13 @@ public class EntidadEntity implements Serializable {
 	public void setEndPointEntidadEntityList(List<EndPointEntidadEntity> endPointEntidadEntityList) {
 		this.endPointEntidadEntityList = endPointEntidadEntityList;
 	}
+    public String getSubdominioEmpresa() {
+        return subdominioEmpresa;
+    }
 
+    public void setSubdominioEmpresa(String subdominioEmpresa) {
+        this.subdominioEmpresa = subdominioEmpresa;
+    }
 	@Override
     public int hashCode() {
         int hash = 0;

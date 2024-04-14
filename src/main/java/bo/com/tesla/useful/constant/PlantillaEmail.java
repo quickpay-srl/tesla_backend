@@ -1,5 +1,7 @@
 package bo.com.tesla.useful.constant;
 
+import bo.com.tesla.administracion.entity.DeudaClienteEntity;
+import bo.com.tesla.administracion.entity.EntidadEntity;
 import bo.com.tesla.useful.utils.FuncionesFechas;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -184,18 +186,83 @@ public class PlantillaEmail {
     			+ "</html>";
 		return bodyHtml;
 	}
-	public static String plantillaNotfClientePago(String nombreCliente,String monto,String moneda,String aliasQr ) {
+	public static String plantillaNotfClientePago(String codigo,DeudaClienteEntity deudaClienteEntity, EntidadEntity entidadEntity, String monto, String moneda, String aliasQr ) {
 
 
 
-		String bodyHtml="<p>Estimado(a):</p>\n" +
+		/*String bodyHtml="<p>Estimado(a):</p>\n" +
 				"<p>"+nombreCliente+"</p>\n" +
 				"<p>Le informamos que en fecha: <strong>"+ FuncionesFechas.ObtenerFechaActuamasHora()
 				+"</strong> se ha recibido el pago de <strong>"+monto+" "+moneda+" </strong>con QR&nbsp; <strong>"+aliasQr+"</strong>.</p>\n" +
 				"<p>Cuando se genere la factura se notificara por este medio.</p>\n" +
 				"<p>Saludos cordiales.</p>\n" +
 				"<p>Este es un mensaje autom&aacute;tico y no es necesario responder.</p>\n" +
-				"<p>Si tiene alguna consulta puede contactarse con los administradores de la plataforma QUICKPAY.</p>";
+				"<p>Si tiene alguna consulta puede contactarse con los administradores de la plataforma QUICKPAY.</p>";*/
+
+
+
+
+		String bodyHtml = "<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"https://quickpay.com.bo:8087/assets/QuickPayLogo1-83c293a3.png\" alt=\"\" width=\"200\" height=\"53\" /></span></span></p>\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Hola "+deudaClienteEntity.getNombreCliente()+", </span></span></p>\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Su pago se ha registrado exitosamente.</span></span></p>\n" +
+				"<p>&nbsp;</p>\n" +
+				"<table class=\"MsoTableGrid\" style=\"border-collapse: collapse; border: none;\" width=\"90%\" cellspacing=\"0\" align=\"center\">\n" +
+				"<tbody>\n" +
+				"<tr>\n" +
+				"<td style=\"vertical-align: top; width: 255px; border: 1px solid black;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">C&oacute;digo de transacci&oacute;n</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: 1px solid black; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">"+codigo+"</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"<tr>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Entidad de cobro</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">"+entidadEntity.getNombre()+"</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"<tr>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Fecha de pago</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">"+FuncionesFechas.ObtenerFechaActuamasHora()+"</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"<tr>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Concepto</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">"+deudaClienteEntity.getConcepto()+"</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"<tr>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Monto Total</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">"+moneda+". "+monto+"</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"<tr>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p style=\"text-align: right;\"><strong><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">M&eacute;todo de Pago</span></span></strong></p>\n" +
+				"</td>\n" +
+				"<td style=\"border-bottom: 1px solid black; border-left: none; border-right: 1px solid black; border-top: none; vertical-align: top; width: 255px;\">\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">QR</span></span></p>\n" +
+				"</td>\n" +
+				"</tr>\n" +
+				"</tbody>\n" +
+				"</table>\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Gracias por utilizar <a href=\"https://quickpay.com.bo:8087\">Quick Pay</a>.</span></span></p>\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Saludos cordiales.</span></span></p>\n" +
+				"<p>&nbsp;</p>\n" +
+				"<p><span style=\"font-size: 10px;\"><em><span style=\"font-family: Calibri,sans-serif;\">Este es un mensaje autom&aacute;tico y no debe ser respondido.</span></em></span></p>\n" +
+				"<p><span style=\"font-size: 10px;\"><em><span style=\"font-family: 'Calibri',sans-serif;\">Si requiere soporte con respecto a su pago, por favor cont&aacute;ctese al Whatsapp 640 74742</span></em></span></p>";
 		return bodyHtml;
 	}
 }

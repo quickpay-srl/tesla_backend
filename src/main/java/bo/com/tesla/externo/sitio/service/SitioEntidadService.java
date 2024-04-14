@@ -36,6 +36,7 @@ public class SitioEntidadService {
                                 obj.getEntidadId(),
                                 obj.getNombre(),
                                 obj.getNombreComercial(),
+                                obj.getSubdominioEmpresa(),
                                 obj.getDireccion(),
                                 obj.getTelefono(),
                                 obj.getNit(),
@@ -117,6 +118,24 @@ public class SitioEntidadService {
             res.message = ex.toString();
             return res;
         }
-    }
+    }    public ResponseDto getEntidadForSubDominioEmpresa(String pSubdominioEmpresa) {
 
+        ResponseDto res = new ResponseDto();
+        try{
+            Optional<SitioEntidadDto> objEntidad =  iEntidadDao.findBySubdominioEmpresa(pSubdominioEmpresa);
+            if(objEntidad.isEmpty()){
+                res.status = false;
+                res.message="no hay entidad";
+            }else{
+                res.status = true;
+                res.result = objEntidad.get();
+            }
+
+            return res;
+        }catch (Exception ex){
+            res.status = false;
+            res.message = ex.toString();
+            return res;
+        }
+    }
 }

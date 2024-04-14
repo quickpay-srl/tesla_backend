@@ -40,17 +40,8 @@ public class DatosConfirmadoQrEntity implements Serializable {
     private Date fechaRegistro;
     @Column(name = "estado")
     private String  estado;
-
-
-
-
-
-
-
-
-
-
-
+    @Column(name = "codigo_pago")
+    private String  codigoPago;
 
 
 }

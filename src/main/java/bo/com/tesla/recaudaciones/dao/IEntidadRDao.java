@@ -45,7 +45,7 @@ public interface IEntidadRDao extends JpaRepository<EntidadEntity, Long> {
                                         @Param("usuarioModificacion") Long usuarioModificacion);*/
 
     @Query(value = "SELECT new bo.com.tesla.administracion.dto.EntidadAdmDto(" +
-            "e.entidadId, e.nombre, e.nombreComercial, e.direccion, e.telefono, e.nit, " +
+            "e.entidadId, e.nombre, e.nombreComercial,e.subdominioEmpresa, e.direccion, e.telefono, e.nit, " +
             "e.pathLogo, e.comprobanteEnUno, e.actividadEconomica.dominioId, e.actividadEconomica.descripcion, " +
             "e.tipoEntidad.dominioId, e.tipoEntidad.descripcion, " +
             "e.modalidadFacturacion.dominioId, e.modalidadFacturacion.descripcion, e.esCobradora, e.esPagadora, " +
@@ -56,7 +56,7 @@ public interface IEntidadRDao extends JpaRepository<EntidadEntity, Long> {
     List<EntidadAdmDto> findEntidadesDtoAll();
 
     @Query(value = "SELECT new bo.com.tesla.administracion.dto.EntidadAdmDto(" +
-            "e.entidadId, e.nombre, e.nombreComercial, e.direccion, e.telefono, e.nit, " +
+            "e.entidadId, e.nombre, e.nombreComercial,e.subdominioEmpresa, e.direccion, e.telefono, e.nit, " +
             "e.pathLogo, e.comprobanteEnUno, e.actividadEconomica.dominioId, e.actividadEconomica.descripcion, " +
             "e.tipoEntidad.dominioId, e.tipoEntidad.descripcion, " +
             "e.modalidadFacturacion.dominioId, e.modalidadFacturacion.descripcion, e.esCobradora, e.esPagadora, " +
@@ -68,7 +68,7 @@ public interface IEntidadRDao extends JpaRepository<EntidadEntity, Long> {
 
 
     @Query(value = "SELECT new bo.com.tesla.administracion.dto.EntidadAdmDto(" +
-            "er.entidad.entidadId, er.entidad.nombre, er.entidad.nombreComercial, er.entidad.direccion, er.entidad.telefono, er.entidad.nit, " +
+            "er.entidad.entidadId, er.entidad.nombre, er.entidad.nombreComercial,er.entidad.subdominioEmpresa, er.entidad.direccion, er.entidad.telefono, er.entidad.nit, " +
             "er.entidad.pathLogo, er.entidad.comprobanteEnUno, er.entidad.actividadEconomica.dominioId, er.entidad.actividadEconomica.descripcion, " +
             "er.entidad.tipoEntidad.dominioId, er.entidad.tipoEntidad.descripcion, " +
             "er.entidad.modalidadFacturacion.dominioId, er.entidad.modalidadFacturacion.descripcion, er.entidad.esCobradora, er.entidad.esPagadora, " +

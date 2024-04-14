@@ -22,12 +22,13 @@ public class ConfirmarPagoQRController {
 
     @PostMapping("/confirmaPago") // verifica estado de transaccion con qr
     public ResponseEntity<?> estadoTransaccionQr(@RequestBody Map request) {
+        Long datosconfirmadoQrId=0L;
         try{
-            confirmarPagoQRService.notificaClientePago(request.get("monto")+"",request.get("moneda")+"",request.get("alias")+"");
+            datosconfirmadoQrId = confirmarPagoQRService.notificaClientePago(request);
         }catch (Exception ex){}
 
         try{
-            Map responseDto = confirmarPagoQRService.registrarConfirmacion(request);
+            Map responseDto = confirmarPagoQRService.registrarConfirmacion(request,datosconfirmadoQrId);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }catch (Exception ex){
             Map<String, Object> response = new HashMap<>();

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class SitioDeudaClienteDetDto {
 
     private Long deudaClienteId;
+    private Integer nroRegistro;
     private String tipoServicio;
     private String servicio;
     private String periodo;
@@ -18,8 +19,9 @@ public class SitioDeudaClienteDetDto {
     private BigDecimal montoUnitario;
     private BigDecimal subTotal;
 
-    public SitioDeudaClienteDetDto(Long deudaClienteId, String tipoServicio, String servicio, String periodo, BigDecimal cantidad, String concepto, BigDecimal montoUnitario, BigDecimal subTotal) {
+    public SitioDeudaClienteDetDto(Long deudaClienteId,Integer nroRegistro, String tipoServicio, String servicio, String periodo, BigDecimal cantidad, String concepto, BigDecimal montoUnitario, BigDecimal subTotal) {
         this.deudaClienteId = deudaClienteId;
+        this.nroRegistro = nroRegistro;
         this.tipoServicio = tipoServicio;
         this.servicio = servicio;
         this.periodo = periodo;

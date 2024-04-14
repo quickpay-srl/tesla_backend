@@ -11,6 +11,9 @@ public class EntidadAdmDto {
     public String nombre;
     public String nombreComercial;
     @NotBlank(message = "La DIRECCION es obligatoria.")
+
+    public String subdominioEmpresa;
+
     public String direccion;
     public String telefono;
     public String nit;
@@ -34,10 +37,11 @@ public class EntidadAdmDto {
 
     public EntidadAdmDto() {}
 
-    public EntidadAdmDto(Long entidadId, @NotBlank(message = "El NOMBRE es obligatorio.") String nombre, String nombreComercial, @NotBlank(message = "La DIRECCION es obligatoria.") String direccion, String telefono, String nit, String pathLogo, Boolean comprobanteEnUno, Long actividadEconomicaId, String actividadEconomicaDescripcion, Long tipoEntidadId, String tipoEntidadDescripcion, Long modalidadFacturacionId, String modalidadFacturacionDescripcion, Boolean esCobradora, Boolean esPagadora, Date fechaCreacion, String usuarioCreacionLogin, String estado) {
+    public EntidadAdmDto(Long entidadId, @NotBlank(message = "El NOMBRE es obligatorio.") String nombre, String nombreComercial,String  subdominioEmpresa,@NotBlank(message = "La DIRECCION es obligatoria.") String direccion, String telefono, String nit, String pathLogo, Boolean comprobanteEnUno, Long actividadEconomicaId, String actividadEconomicaDescripcion, Long tipoEntidadId, String tipoEntidadDescripcion, Long modalidadFacturacionId, String modalidadFacturacionDescripcion, Boolean esCobradora, Boolean esPagadora, Date fechaCreacion, String usuarioCreacionLogin, String estado) {
         this.entidadId = entidadId;
         this.nombre = nombre;
         this.nombreComercial = nombreComercial;
+        this.subdominioEmpresa = subdominioEmpresa;
         this.direccion = direccion;
         this.telefono = telefono;
         this.nit = nit;

@@ -22,19 +22,28 @@ public interface ISitioEntidadDao extends JpaRepository<EntidadEntity,Long> {
     public List<EntidadEntity> findEntidadByTipoEntidadId(@Param("tipoEntidadId") Long tipoEntidadId);
 
     @Query(value = "select new bo.com.tesla.externo.sitio.dto.SitioEntidadDto(" +
-            " e.entidadId,e.nombre, e.nombreComercial,e.direccion, e.telefono,e.nit,'',e.pathLogo,false) "+
+            " e.entidadId,e.nombre, e.nombreComercial,e.subdominioEmpresa, e.direccion, e.telefono,e.nit,'',e.pathLogo,false) "+
             " from EntidadEntity e " +
             " where e.estado = 'ACTIVO' and e.nombre!='-' and e.tipoEntidad.dominioId =:pTipoEntidadId ")
     List<SitioEntidadDto> findByTipoEntidadId(@Param("pTipoEntidadId") Long pTipoEntidadId);
 
     @Query(value = "select new bo.com.tesla.externo.sitio.dto.SitioEntidadDto(" +
-            " e.entidadId,e.nombre, e.nombreComercial,e.direccion, e.telefono,e.nit,'',e.pathLogo,false) "+
+            " e.entidadId,e.nombre, e.nombreComercial,e.subdominioEmpresa, e.direccion, e.telefono,e.nit,'',e.pathLogo,false) "+
             " from EntidadEntity e " +
             " where e.estado = 'ACTIVO' and e.entidadId =:pEntidadId ")
     Optional<SitioEntidadDto> findByEntidadId(@Param("pEntidadId") Long pEntidadId);
 
+    @Query("select a.entidadId "
+            + " from   ArchivoEntity a inner join DeudaClienteEntity d on d.archivoId.archivoId = a.archivoId "
+            + " where a.archivoId = :archivoId "
+            + " and a.estado = 'ACTIVO' ")
+    Optional<EntidadEntity> findByArchivoId(@Param("archivoId") Long archivoId);
 
-
+    @Query(value = "select new bo.com.tesla.externo.sitio.dto.SitioEntidadDto(" +
+            " e.entidadId,e.nombre, e.nombreComercial,e.subdominioEmpresa, e.direccion, e.telefono,e.nit,'',e.pathLogo,false) "+
+            " from EntidadEntity e " +
+            " where e.estado = 'ACTIVO' and e.subdominioEmpresa =:pSubdominioEmpresa ")
+    Optional<SitioEntidadDto> findBySubdominioEmpresa(@Param("pSubdominioEmpresa") String pSubdominioEmpresa);
 
 
 }

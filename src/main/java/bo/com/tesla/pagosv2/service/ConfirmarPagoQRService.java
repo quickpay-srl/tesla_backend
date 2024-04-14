@@ -2,9 +2,11 @@ package bo.com.tesla.pagosv2.service;
 
 import bo.com.tesla.administracion.entity.*;
 import bo.com.tesla.externo.sitio.dao.ISitioDeudaClienteDao;
+import bo.com.tesla.externo.sitio.dao.ISitioEntidadDao;
 import bo.com.tesla.externo.sitio.dto.SitioDatosCobroDto;
 import bo.com.tesla.facturacion.electronica.services.ConexionFacElectronicaService;
 import bo.com.tesla.pagosv2.dao.ISitioDatosConfirmadoQrDao;
+
 import bo.com.tesla.pagosv2.dao.ISitioQrGeneradoDao;
 import bo.com.tesla.recaudaciones.dao.*;
 import bo.com.tesla.recaudaciones.dto.requestGenerarFactura.*;
@@ -73,12 +75,15 @@ public class ConfirmarPagoQRService {
     @Autowired
     private SendEmail sendEmail;
 
-    public  void notificaClientePago(String monto,String moneda, String aliasQr){
+    @Autowired
+    private ISitioEntidadDao iSitioEntidadDao;
+
+    public   Long  notificaClientePago(Map datosConfirmacionPagoQr ){
 
        try{
 
            // Verificar si el QR fue generado por nuestro sistema
-           List<QRGeneradoEntity>  lstQrGenerado = iSitioQrGeneradoDao.findByAlias(aliasQr);
+           List<QRGeneradoEntity>  lstQrGenerado = iSitioQrGeneradoDao.findByAlias(datosConfirmacionPagoQr.get("alias") + "");
            if(lstQrGenerado.isEmpty()){
                System.out.println("EL QR no se ha generado desde la Empresa");
                throw new Technicalexception("EL QR no se ha generado desde la Empresa ");
@@ -86,50 +91,67 @@ public class ConfirmarPagoQRService {
 
            //obtener coreo y nombre cliente
            Optional<DeudaClienteEntity> objDeudaCliente = iSitioDeudaClienteDao.findForDeudaClienteId(lstQrGenerado.get(0).getDeudaClienteId());
+           Optional<EntidadEntity> objEntidad =  iSitioEntidadDao.findByArchivoId(objDeudaCliente.get().getArchivoId().getArchivoId());
 
 
-           String plantillaCorreo = PlantillaEmail.plantillaNotfClientePago(objDeudaCliente.get().getNombreCliente(),monto,moneda,aliasQr);
-           this.sendEmail.sendHTML(correoEnvio, objDeudaCliente.get().getCorreoCliente(), "Notificación de confirmación de Pago (QUICKPAY)",
-                   plantillaCorreo);
+           Double  aleatorio = Math.floor(Math.random() * (100000-1+1)) + 1;
+
+           String codigo = "";
+           String nombreCliente = objDeudaCliente.get().getNombreCliente();
+           String[] nombreArray = nombreCliente.split(" ");
+
+           for (String nombre :nombreArray) {
+               codigo = nombre.charAt(0)+"";
+           }
+            codigo = codigo = (aleatorio.intValue()) +"";
+
+           System.out.println("INGRESANDO A CONFIRMAR");
+           // almacenando datos qr
+           DatosConfirmadoQrEntity insertdatosQrEntity = new DatosConfirmadoQrEntity();
+           insertdatosQrEntity.setAliasSip(datosConfirmacionPagoQr.get("alias") + "");
+           insertdatosQrEntity.setNumeroOrdenOriginanteSip(datosConfirmacionPagoQr.get("numeroOrdenOriginante") + "");
+           insertdatosQrEntity.setMontoSip(datosConfirmacionPagoQr.get("monto") + "");
+           insertdatosQrEntity.setIdQrSip(datosConfirmacionPagoQr.get("idQr") + "");
+           insertdatosQrEntity.setMonedaSip(datosConfirmacionPagoQr.get("moneda") + "");
+           insertdatosQrEntity.setFechaProcesoSip(datosConfirmacionPagoQr.get("fechaproceso") + "");
+           insertdatosQrEntity.setCuentaClienteSip(datosConfirmacionPagoQr.get("cuentaCliente") + "");
+           insertdatosQrEntity.setNombreClienteSip(datosConfirmacionPagoQr.get("nombreCliente") + "");
+           insertdatosQrEntity.setDocumentoClienteSip(datosConfirmacionPagoQr.get("documentoCliente") + "");
+           insertdatosQrEntity.setFechaRegistro(new Date());
+           insertdatosQrEntity.setEstado("ACTIVO");
+           insertdatosQrEntity.setCodigoPago(codigo);
+           iSitioDatosConfirmadoQrDao.save(insertdatosQrEntity);
+           System.out.println("INGRESANDO DATOS QR");
+
+           try {
+               conexionConfirmaPagoQrService.getResponseMethodGet("v1/qr/notificar/"+datosConfirmacionPagoQr.get("alias"));
+           } catch (Exception ex)
+           {
+               System.out.println("Error el enviar notificación");
+           }
+
+           String plantillaCorreo = PlantillaEmail.plantillaNotfClientePago(codigo,objDeudaCliente.get(),objEntidad.get(), (datosConfirmacionPagoQr.get("monto") + ""),
+                   datosConfirmacionPagoQr.get("moneda") + "",datosConfirmacionPagoQr.get("alias") + "");
+           this.sendEmail.sendHTML(correoEnvio, objDeudaCliente.get().getCorreoCliente(), "Quick Pay pago exitoso", plantillaCorreo);
+
+           return insertdatosQrEntity.getDatosconfirmadoQrId();
+
        }catch (Exception ex){
            System.out.println("ERROR EN ENVIO SMS");
            System.out.println(ex.toString());
+           return 0L;
        }
 
 
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Technicalexception.class)
-    public Map registrarConfirmacion(Map datosConfirmacionPagoQr) {
+    public Map registrarConfirmacion(Map datosConfirmacionPagoQr, Long datosconfirmadoQrId) {
         Map<String, Object> response = new HashMap<>();
         List<TransaccionCobroEntity> transaccionesCobroList = new ArrayList<>();
         List<DeudaClienteEntity> deudaClienteEntityList = new ArrayList<>();
 
         try {
-            try {
-                conexionConfirmaPagoQrService.getResponseMethodGet("v1/qr/notificar/"+datosConfirmacionPagoQr.get("alias"));
-            } catch (Exception ex)
-            {
-                System.out.println("Error el enviar notificación");
-            }
-
-
-            System.out.println("INGRESANDO A CONFIRMAR");
-            // almacenando datos qr
-            DatosConfirmadoQrEntity insertdatosQrEntity = new DatosConfirmadoQrEntity();
-            insertdatosQrEntity.setAliasSip(datosConfirmacionPagoQr.get("alias") + "");
-            insertdatosQrEntity.setNumeroOrdenOriginanteSip(datosConfirmacionPagoQr.get("numeroOrdenOriginante") + "");
-            insertdatosQrEntity.setMontoSip(datosConfirmacionPagoQr.get("monto") + "");
-            insertdatosQrEntity.setIdQrSip(datosConfirmacionPagoQr.get("idQr") + "");
-            insertdatosQrEntity.setMonedaSip(datosConfirmacionPagoQr.get("moneda") + "");
-            insertdatosQrEntity.setFechaProcesoSip(datosConfirmacionPagoQr.get("fechaproceso") + "");
-            insertdatosQrEntity.setCuentaClienteSip(datosConfirmacionPagoQr.get("cuentaCliente") + "");
-            insertdatosQrEntity.setNombreClienteSip(datosConfirmacionPagoQr.get("nombreCliente") + "");
-            insertdatosQrEntity.setDocumentoClienteSip(datosConfirmacionPagoQr.get("documentoCliente") + "");
-            insertdatosQrEntity.setFechaRegistro(new Date());
-            insertdatosQrEntity.setEstado("ACTIVO");
-            iSitioDatosConfirmadoQrDao.save(insertdatosQrEntity);
-            System.out.println("INGRESANDO DATOS QR");
 
             // Verificar si el QR fue generado por nuestro sistema
             List<QRGeneradoEntity>  lstQrGenerado = iSitioQrGeneradoDao.findByAlias(datosConfirmacionPagoQr.get("alias") + "");
@@ -143,9 +165,6 @@ public class ConfirmarPagoQRService {
                 System.out.println("El monto generado del QR fue de "+lstQrGenerado.get(0).getMonto());
                 throw new Technicalexception("El monto generado del QR fue de "+lstQrGenerado.get(0).getMonto());
             }
-
-
-
 
             for (QRGeneradoEntity qrGeneradoEntity : lstQrGenerado) {
 
@@ -183,7 +202,7 @@ public class ConfirmarPagoQRService {
                 transaccionCobroEntity.setNombreClienteArchivo(objDeudaCliente.get().getNombreCliente());
                 transaccionCobroEntity.setNroDocumentoClienteArchivo(objDeudaCliente.get().getNroDocumento());
                 transaccionCobroEntity.setCorreoCliente(objDeudaCliente.get().getCorreoCliente());
-                transaccionCobroEntity.setDatosconfirmadoQrId(insertdatosQrEntity.getDatosconfirmadoQrId());
+                transaccionCobroEntity.setDatosconfirmadoQrId(datosconfirmadoQrId);
                 //transaccionCobroEntity.setEstado("COBRADO");
                 transaccionCobroEntity.setTransaccion("CREAR");
                 transaccionCobroEntity.setDeudaClienteId(objDeudaCliente.get().getDeudaClienteId());

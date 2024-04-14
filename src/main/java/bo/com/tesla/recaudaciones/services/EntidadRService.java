@@ -66,6 +66,7 @@ public class EntidadRService implements IEntidadRService {
                 EntidadEntity entidadEntity = new EntidadEntity();
                 entidadEntity.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
                 entidadEntity.setUsuarioCreacion(usuarioId);
+
                 entidadEntity.setTransaccion("CREAR");
 
                 loadEntidadRecaudadorEntityList(entidadAdmDto, entidadEntity, usuarioId);
@@ -122,6 +123,7 @@ public class EntidadRService implements IEntidadRService {
         entidadEntity.setTipoEntidad(tipoEntidadOptional.get());
         entidadEntity.setNombre(entidadAdmDto.nombre.toUpperCase().trim());
         entidadEntity.setNombreComercial(entidadAdmDto.nombreComercial != null ? entidadAdmDto.nombreComercial.toUpperCase().trim() : null);
+        entidadEntity.setSubdominioEmpresa(entidadAdmDto.subdominioEmpresa);
         entidadEntity.setDireccion(entidadAdmDto.direccion.toUpperCase().trim());
         entidadEntity.setTelefono(entidadAdmDto.telefono.toUpperCase().trim());
         entidadEntity.setNit(entidadAdmDto.nit);

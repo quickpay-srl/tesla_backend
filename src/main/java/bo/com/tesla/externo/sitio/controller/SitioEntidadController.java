@@ -60,5 +60,14 @@ public class SitioEntidadController {
         response.put("result", responseDto.result);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/for-subdominio/{pSubdominioEmpresa}")
+    public ResponseEntity<?> getForSubDominio(@PathVariable String pSubdominioEmpresa){
+        Map<String, Object> response = new HashMap<>();
+        ResponseDto responseDto = entidadService.getEntidadForSubDominioEmpresa(pSubdominioEmpresa);
+        response.put("status", responseDto.status);
+        response.put("message", responseDto.message);
+        response.put("result", responseDto.result);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

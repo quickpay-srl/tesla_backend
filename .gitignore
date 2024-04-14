@@ -344,3 +344,10 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,code-java,eclipse,intellij,intellij+all,intellij+iml
 
 postgres_data
+
+#no va
+aplication-qa.properties
+aplication-dev.properties
+aplication-prod.properties
+aplication.properties
+certificate.pfx
