@@ -12,10 +12,10 @@
 
 
 	<groupId>bo.com.tesla</groupId>
-	<artifactId>tesla</artifactId>
-	<version>1.3.0.0</version>
-	<name>tesla_backend</name>
-	<description>tesla</description>
+	<artifactId>quickpay-interno</artifactId>
+	<version>1.4</version>
+	<name>quickpay-interno</name>
+	<description>quickpay-interno</description>
 	<properties>
 		<!--<java.version>1.8</java.version>-->
 		<java.version>17</java.version>

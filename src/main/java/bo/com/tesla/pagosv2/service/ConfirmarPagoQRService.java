@@ -124,7 +124,7 @@ public class ConfirmarPagoQRService {
            System.out.println("INGRESANDO DATOS QR");
 
            try {
-               conexionConfirmaPagoQrService.getResponseMethodGet("v1/qr/notificar/"+datosConfirmacionPagoQr.get("alias"));
+               conexionConfirmaPagoQrService.getResponseMethodGet("qr/notificar/"+datosConfirmacionPagoQr.get("alias"));
            } catch (Exception ex)
            {
                System.out.println("Error el enviar notificación");
