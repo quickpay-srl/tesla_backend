@@ -258,11 +258,24 @@ public class PlantillaEmail {
 				"</tr>\n" +
 				"</tbody>\n" +
 				"</table>\n" +
-				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Gracias por utilizar <a href=\"https://quickpay.com.bo:8087\">Quick Pay</a>.</span></span></p>\n" +
+				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Gracias por utilizar <a href=\"https://quickpay.com.bo:7085\">Quick Pay</a>.</span></span></p>\n" +
 				"<p><span style=\"font-size: 12pt;\"><span style=\"font-family: Calibri,sans-serif;\">Saludos cordiales.</span></span></p>\n" +
 				"<p>&nbsp;</p>\n" +
 				"<p><span style=\"font-size: 10px;\"><em><span style=\"font-family: Calibri,sans-serif;\">Este es un mensaje autom&aacute;tico y no debe ser respondido.</span></em></span></p>\n" +
 				"<p><span style=\"font-size: 10px;\"><em><span style=\"font-family: 'Calibri',sans-serif;\">Si requiere soporte con respecto a su pago, por favor cont&aacute;ctese al Whatsapp 640 74742</span></em></span></p>";
+		return bodyHtml;
+	}
+	public static String plantillaContactanos(String nombre,String correo, String asunto, String mensaje) {
+
+		String bodyHtml = "<p>&nbsp;</p>\n" +
+				"<p style=\"text-align: center;\"><strong>NOTIFICACI&Oacute;N PARA CONTACTO</strong></p>\n" +
+				"<ul>\n" +
+				"<li style=\"text-align: left;\"><strong>Nombre: </strong>"+nombre+"</li>\n" +
+				"<li style=\"text-align: left;\"><strong>Correo: </strong>"+correo+"</li>\n" +
+				"<li style=\"text-align: left;\"><strong>Asunto:</strong>"+asunto+"</li>\n" +
+				"<li style=\"text-align: left;\"><strong>Mensaje:</strong>"+mensaje+"</li>\n" +
+				"</ul>\n" +
+				"<p>&nbsp; &nbsp; &nbsp; &nbsp;</p>";
 		return bodyHtml;
 	}
 }

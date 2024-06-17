@@ -129,6 +129,26 @@ public class DeudaClienteEntity implements Serializable {
 	@Column(name="correo_cliente",length = 50)
 	private String correoCliente;
 
+	@Column(name="codigo_producto")
+	private String codigoProducto;
+	@Column(name="codigo_producto_sin")
+	private String codigoProductoSin;
+
+	public String getCodigoProducto() {
+		return codigoProducto;
+	}
+
+	public void setCodigoProducto(String codigoProducto) {
+		this.codigoProducto = codigoProducto;
+	}
+
+	public String getCodigoProductoSin() {
+		return codigoProductoSin;
+	}
+
+	public void setCodigoProductoSin(String codigoProductoSin) {
+		this.codigoProductoSin = codigoProductoSin;
+	}
 
 	@Transient
 	private Boolean esPorServicioWeb=false;

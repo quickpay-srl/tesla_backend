@@ -113,6 +113,7 @@ bo\com\tesla\security\aut\AuthenticationSuccessErrorHandler.class
 bo\com\tesla\useful\config\BusinesException.class
 bo\com\tesla\facturacion\electronica\services\RestTemplateFacturacionElectronica.class
 bo\com\tesla\administracion\entity\MensajeSistemaEntity.class
+bo\com\tesla\externo\sitio\service\ContactanosService.class
 bo\com\tesla\administracion\entity\EmpleadoEntity.class
 bo\com\tesla\pagos\dto\PPagosDto.class
 bo\com\tesla\administracion\dto\EntidadAdmDto.class
@@ -341,6 +342,7 @@ bo\com\tesla\externo\sitio\dto\SitioEntidadDto.class
 bo\com\tesla\recaudaciones\dao\ICobroClienteDao.class
 bo\com\tesla\recaudaciones\dto\DeudaClienteDto.class
 bo\com\tesla\recaudaciones\services\EntidadRService.class
+bo\com\tesla\externo\sitio\controller\ContactanosController.class
 bo\com\tesla\recaudaciones\services\TransaccionCobroService.class
 bo\com\tesla\security\services\ISegUsuarioService.class
 bo\com\tesla\pagosv2\dto\ResponseSipto.class

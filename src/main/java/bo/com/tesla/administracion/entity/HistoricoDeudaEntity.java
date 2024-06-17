@@ -116,8 +116,6 @@ public class HistoricoDeudaEntity implements Serializable {
     @Column(name = "sub_total", precision = 17, scale = 2)
     private BigDecimal subTotal;
     
-    
-    
     @Column(nullable = false, length = 15)
     private String estado;
     
@@ -125,10 +123,29 @@ public class HistoricoDeudaEntity implements Serializable {
 	@Column(name = "codigo_actividad_economica", nullable = false, length = 10)	
 	private String codigoActividadEconomica;
 
-
 	@Column(name="correo_cliente",length = 50)
 	private String correoCliente;
-	
+    @Column(name="codigo_producto")
+    private String codigoProducto;
+    @Column(name="codigo_producto_sin")
+    private String codigoProductoSin;
+
+    public String getCodigoProducto() {
+        return codigoProducto;
+    }
+
+    public void setCodigoProducto(String codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
+    public String getCodigoProductoSin() {
+        return codigoProductoSin;
+    }
+
+    public void setCodigoProductoSin(String codigoProductoSin) {
+        this.codigoProductoSin = codigoProductoSin;
+    }
+
     public HistoricoDeudaEntity() {
     }
 

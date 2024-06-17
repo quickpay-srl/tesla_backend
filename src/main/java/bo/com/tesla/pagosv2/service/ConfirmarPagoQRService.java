@@ -272,8 +272,8 @@ public class ConfirmarPagoQRService {
             List<DetalleFacturaDto> lstDetalleFacturaDto = new ArrayList<>();
             for (DeudaClienteEntity objDet : deudaClienteEntityList) {
                 DetalleFacturaDto detalleFacturaDto = new DetalleFacturaDto();
-                detalleFacturaDto.setCodigoProductoSin("83131");
-                detalleFacturaDto.setCodigoProducto(objDet.getDeudaClienteId().toString());
+                detalleFacturaDto.setCodigoProductoSin(objDet.getCodigoProductoSin());
+                detalleFacturaDto.setCodigoProducto(objDet.getCodigoProducto());
                 detalleFacturaDto.setDescripcion(objDet.getConcepto());
                 detalleFacturaDto.setCantidad(objDet.getCantidad().intValue());
                 detalleFacturaDto.setUnidadMedida(58);
@@ -283,7 +283,7 @@ public class ConfirmarPagoQRService {
             }
             InputDto inputDto = new InputDto();
             inputDto.setCliente(datosClienteDto);
-            inputDto.setActividadEconomica("620200");// hay q definir con Ricardo , de mommento va quemado
+            inputDto.setActividadEconomica(deudaClienteEntityList.get(0).getCodigoActividadEconomica());
             inputDto.setCodigoMetodoPago(1); // efectivo siempre
             inputDto.setDescuentoAdicional(0F);
             inputDto.setCodigoMoneda(1); // 1 Bs

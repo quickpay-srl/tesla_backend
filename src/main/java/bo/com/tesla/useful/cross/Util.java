@@ -152,7 +152,12 @@ public class Util {
 							+ ", por favor verifique el archivo y vuelva a cargarlo.");
 
 				}
-				if (fields.length != 21) {
+				/*if (fields.length != 21) {
+
+					throw new BusinesException(
+							"Falta o sobra columna(s) en la línea " + rowInt + " verifique el archivo y vuelva a cargarlo.");
+				}*/
+				if (fields.length != 23) {
 
 					throw new BusinesException(
 							"Falta o sobra columna(s) en la línea " + rowInt + " verifique el archivo y vuelva a cargarlo.");

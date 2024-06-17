@@ -32,7 +32,7 @@ public class QRService {
         try {
             Map<String, Object> body = new HashMap<>();
             body.put("alias", UUID.randomUUID());
-            body.put("callback", "https://quickpay.com.bo:9080/sip/endpoint/confirmaPago");
+            body.put("callback", "https://quickpay.com.bo:7080/sip/endpoint/confirmaPago");
             body.put("detalleGlosa", request.getDetalleGlosa());
             body.put("monto", request.getMonto());
             body.put("moneda", request.getMoneda());
