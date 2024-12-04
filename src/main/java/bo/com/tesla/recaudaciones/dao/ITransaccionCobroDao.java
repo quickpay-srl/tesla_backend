@@ -805,6 +805,12 @@ public interface ITransaccionCobroDao extends JpaRepository<TransaccionCobroEnti
 
 	@Query("SELECT t " +
 			"FROM TransaccionCobroEntity t " +
+			"WHERE t.deudaClienteId = :deudaClienteId " +
+			"AND t.estado =:estado")
+	Optional<TransaccionCobroEntity> findByDeudaClienteIdAndEstado(@Param("deudaClienteId") Long deudaClienteId,@Param("estado") String estado);
+
+	@Query("SELECT t " +
+			"FROM TransaccionCobroEntity t " +
 			"WHERE t.datosconfirmadoQrId = :datosConfirmadoQrId " +
 			"AND t.estado ='COBRADO'")
 	List<TransaccionCobroEntity> findByDatosConfirmadoQrId(@Param("datosConfirmadoQrId") Long datosConfirmadoQrId);

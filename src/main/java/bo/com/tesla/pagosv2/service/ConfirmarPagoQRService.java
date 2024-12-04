@@ -3,10 +3,11 @@ package bo.com.tesla.pagosv2.service;
 import bo.com.tesla.administracion.entity.*;
 import bo.com.tesla.externo.sitio.dao.ISitioDeudaClienteDao;
 import bo.com.tesla.externo.sitio.dao.ISitioEntidadDao;
-import bo.com.tesla.externo.sitio.dto.SitioDatosCobroDto;
 import bo.com.tesla.facturacion.electronica.services.ConexionFacElectronicaService;
+import bo.com.tesla.pagosv2.dao.ILogPagoDao;
 import bo.com.tesla.pagosv2.dao.ISitioDatosConfirmadoQrDao;
 
+import bo.com.tesla.pagosv2.dao.ISitioHistoricoDeudasDao;
 import bo.com.tesla.pagosv2.dao.ISitioQrGeneradoDao;
 import bo.com.tesla.recaudaciones.dao.*;
 import bo.com.tesla.recaudaciones.dto.requestGenerarFactura.*;
@@ -15,20 +16,16 @@ import bo.com.tesla.useful.config.Technicalexception;
 import bo.com.tesla.useful.constant.PlantillaEmail;
 import bo.com.tesla.useful.cross.SendEmail;
 import bo.com.tesla.useful.dto.ResponseDto;
-import javassist.expr.Cast;
+import org.dataloader.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Convert;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.net.Socket;
+import java.net.InetAddress;
 import java.util.*;
 
 @Service
@@ -39,9 +36,11 @@ public class ConfirmarPagoQRService {
 
     @Autowired
     private ISitioDeudaClienteDao iSitioDeudaClienteDao;
-
+    @Autowired
+    private ISitioHistoricoDeudasDao iSitioHistoricoDeudasDao;
     @Autowired
     private IRecaudadorDao iRecaudadorDao;
+
     @Autowired
     private IDominioDao iDominioDao;
 
@@ -78,6 +77,14 @@ public class ConfirmarPagoQRService {
     @Autowired
     private ISitioEntidadDao iSitioEntidadDao;
 
+    @Value("${us.quickpay}")
+    private Long usQuickpay;
+    @Autowired
+    Environment environment;
+
+    @Autowired
+    private ILogPagoDao iLogPagoDao;
+
     public   Long  notificaClientePago(Map datosConfirmacionPagoQr ){
 
        try{
@@ -96,14 +103,28 @@ public class ConfirmarPagoQRService {
 
            Double  aleatorio = Math.floor(Math.random() * (100000-1+1)) + 1;
 
-           String codigo = "";
+
            String nombreCliente = objDeudaCliente.get().getNombreCliente();
            String[] nombreArray = nombreCliente.split(" ");
+           String codigo = "";
 
-           for (String nombre :nombreArray) {
-               codigo = nombre.charAt(0)+"";
+
+           List<DatosConfirmadoQrEntity> lstPagoQr = iSitioDatosConfirmadoQrDao.buscarByAlias(datosConfirmacionPagoQr.get("alias")+"");
+           boolean enviaCorreo = false;
+           if(lstPagoQr.size()>0)
+           {
+               DatosConfirmadoQrEntity  pagoQr = lstPagoQr.get(0);
+               codigo =  pagoQr.getCodigoPago();
+               pagoQr.setEstado("HISTORICO");
+               iSitioDatosConfirmadoQrDao.save(pagoQr);
+
+           }else{
+               for (String nombre :nombreArray) {
+                   codigo = nombre.charAt(0)+"";
+               }
+               codigo = codigo = (aleatorio.intValue()) +"";
+               enviaCorreo = true;
            }
-            codigo = codigo = (aleatorio.intValue()) +"";
 
            System.out.println("INGRESANDO A CONFIRMAR");
            // almacenando datos qr
@@ -129,16 +150,41 @@ public class ConfirmarPagoQRService {
            {
                System.out.println("Error el enviar notificación");
            }
+            if(enviaCorreo){
+                String plantillaCorreo = PlantillaEmail.plantillaNotfClientePago(codigo,objDeudaCliente.get(),objEntidad.get(), (datosConfirmacionPagoQr.get("monto") + ""),
+                        datosConfirmacionPagoQr.get("moneda") + "",datosConfirmacionPagoQr.get("alias") + "");
+                this.sendEmail.sendHTML(correoEnvio, objDeudaCliente.get().getCorreoCliente(), "Quick Pay pago exitoso", plantillaCorreo);
+            }
 
-           String plantillaCorreo = PlantillaEmail.plantillaNotfClientePago(codigo,objDeudaCliente.get(),objEntidad.get(), (datosConfirmacionPagoQr.get("monto") + ""),
-                   datosConfirmacionPagoQr.get("moneda") + "",datosConfirmacionPagoQr.get("alias") + "");
-           this.sendEmail.sendHTML(correoEnvio, objDeudaCliente.get().getCorreoCliente(), "Quick Pay pago exitoso", plantillaCorreo);
 
            return insertdatosQrEntity.getDatosconfirmadoQrId();
 
        }catch (Exception ex){
            System.out.println("ERROR EN ENVIO SMS");
            System.out.println(ex.toString());
+
+           try
+           {
+
+               InetAddress address = InetAddress.getLocalHost();
+               String port = environment.getProperty("local.server.port");
+               // regsitramos log
+               LogPagoEntity log=new LogPagoEntity();
+               log.setAlias(datosConfirmacionPagoQr.get("alias")+"");
+               log.setJson(datosConfirmacionPagoQr+"");
+               log.setMensajeUsuario("ERROR AL NOTIFICAR");
+               log.setMensajeTecnico(ex.getMessage());
+               log.setFechaInicio(new Date());
+               log.setFechaFin(new Date());
+               log.setHost(address+":"+port);
+               log.setMetodo("notificaClientePago");
+               log.setTipoLog("ERROR");
+               log.setEstadoId("ACTIVO");
+               iLogPagoDao.save(log);
+           }catch (Exception e){
+
+           }
+
            return 0L;
        }
 
@@ -179,7 +225,7 @@ public class ConfirmarPagoQRService {
                 transaccionCobroEntity.setTipoServicio(objDeudaCliente.get().getTipoServicio());
                 transaccionCobroEntity.setServicio(objDeudaCliente.get().getServicio());
                 transaccionCobroEntity.setPeriodo(objDeudaCliente.get().getPeriodo());
-                transaccionCobroEntity.setUsuarioCreacion(130L); // Usuario recaudador
+                transaccionCobroEntity.setUsuarioCreacion(usQuickpay); // Usuario recaudador
                 transaccionCobroEntity.setFechaCreacion(new Date());
                 transaccionCobroEntity.setEntidadId(objDeudaCliente.get().getArchivoId().getEntidadId());
                 transaccionCobroEntity.setTransaccion("CREAR");
@@ -187,7 +233,7 @@ public class ConfirmarPagoQRService {
                 transaccionCobroEntity.setNombreClientePago(objDeudaCliente.get().getNombreCliente());
                 transaccionCobroEntity.setTotalDeuda(objDeudaCliente.get().getSubTotal());
                 transaccionCobroEntity.setNroDocumentoClientePago(objDeudaCliente.get().getNroDocumento());
-                Optional<RecaudadorEntity> recaudadorEntityOptional = iRecaudadorDao.findRecaudadorByUserId(130L);
+                Optional<RecaudadorEntity> recaudadorEntityOptional = iRecaudadorDao.findRecaudadorByUserId(usQuickpay);
                 transaccionCobroEntity.setRecaudador(recaudadorEntityOptional.get());
                 transaccionCobroEntity.setEntidadComision(null);
                 transaccionCobroEntity.setRecaudadorComision(null);
@@ -203,8 +249,6 @@ public class ConfirmarPagoQRService {
                 transaccionCobroEntity.setNroDocumentoClienteArchivo(objDeudaCliente.get().getNroDocumento());
                 transaccionCobroEntity.setCorreoCliente(objDeudaCliente.get().getCorreoCliente());
                 transaccionCobroEntity.setDatosconfirmadoQrId(datosconfirmadoQrId);
-                //transaccionCobroEntity.setEstado("COBRADO");
-                transaccionCobroEntity.setTransaccion("CREAR");
                 transaccionCobroEntity.setDeudaClienteId(objDeudaCliente.get().getDeudaClienteId());
                 transaccionCobroEntity = iTransaccionCobroService.saveTransaccionCobro(transaccionCobroEntity);
 
@@ -239,7 +283,7 @@ public class ConfirmarPagoQRService {
                 cobroClienteEntity.setDireccion(objDeudaCliente.get().getDireccion());
                 cobroClienteEntity.setTelefono(objDeudaCliente.get().getTelefono());
                 cobroClienteEntity.setEsPostpago(objDeudaCliente.get().getEsPostpago());
-                cobroClienteEntity.setUsuarioCreacion(126); // usuario de Recaudador
+                cobroClienteEntity.setUsuarioCreacion(usQuickpay); // usuario de Recaudador
                 cobroClienteEntity.setFechaCreacion(new Date());
                 cobroClienteEntity.setEstado("COBRADO");
                 cobroClienteEntity.setTransaccion("COBRAR"); // SIEMPR SE PONE COBRAR, NOSE POR Q
@@ -255,22 +299,69 @@ public class ConfirmarPagoQRService {
                 objHistorico.setEstado("COBRADO");
                 System.out.println("Historico modificado a COBRADO");
                 iHistoricoDeudaDao.save(objHistorico);
+            }
+            //Eliminar Deudas Clientes
+            iSitioDeudaClienteDao.deleteAll(deudaClienteEntityList);
+            System.out.println("Eliminar Deudas Clientes");
+            response.put("codigo", "0000");
+            response.put("mensaje", "Registro Exitoso");
+            return response;
+
+        } catch (Exception ex) {
+
+            try{
+                InetAddress address = InetAddress.getLocalHost();
+                String port = environment.getProperty("local.server.port");
+                // regsitramos log
+                LogPagoEntity log=new LogPagoEntity();
+                log.setAlias(datosConfirmacionPagoQr.get("alias")+"");
+                log.setJson(datosConfirmacionPagoQr+"");
+                log.setMensajeUsuario("ERROR AL REGISTRAR CONFIRMACIÓN");
+                log.setMensajeTecnico(ex.getMessage());
+                log.setFechaInicio(new Date());
+                log.setFechaFin(new Date());
+                log.setHost(address+":"+port);
+                log.setMetodo("registrarConfirmacion");
+                log.setTipoLog("ERROR");
+                log.setEstadoId("ACTIVO");
+                iLogPagoDao.save(log);
+            }catch (Exception e){
 
             }
 
+
+
+            //.. guardar en log
+            System.out.println("error: "+ex.toString());
+            //throw new Technicalexception("Algo salio mal, comuniquese con administrador");
+            throw new Technicalexception(ex.toString());
+        }
+    }
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Technicalexception.class)
+    public void registrarFactura(Map datosConfirmacionPagoQr) {
+        //Map<String, Object> response = new HashMap<>();
+        //List<TransaccionCobroEntity> transaccionesCobroList = new ArrayList<>();
+
+        try {
+            List<HistoricoDeudaEntity> lstDeudasHistoricas = new ArrayList<>();
+            List<QRGeneradoEntity>  lstQrGenerado = iSitioQrGeneradoDao.findByAlias(datosConfirmacionPagoQr.get("alias") + "");
+            for (QRGeneradoEntity qrGeneradoEntity : lstQrGenerado) {
+                Optional<HistoricoDeudaEntity> objHistoricoDeudaCliente = iSitioHistoricoDeudasDao.findForDeudaClienteId(qrGeneradoEntity.getDeudaClienteId());
+                lstDeudasHistoricas.add(objHistoricoDeudaCliente.get());
+            }
             // Preparar datos para fact electronica
             DatosEntidadDto datosEntidadDto = new DatosEntidadDto();
-            datosEntidadDto.setEntidadId(transaccionesCobroList.get(0).getEntidadId().getEntidadId());
+            datosEntidadDto.setEntidadId(lstDeudasHistoricas.get(0).getArchivoId().getEntidadId().getEntidadId());
             datosEntidadDto.setCodigoPuntoVenta(0);
             datosEntidadDto.setCodigoSucursal(0);
             DatosClienteDto datosClienteDto = new DatosClienteDto();  // a este metod siempre entrada un solo codigo (un solo cliente), por eso se toma el primero de la lista
-            datosClienteDto.setCodigoCliente(deudaClienteEntityList.get(0).getCodigoCliente());
-            datosClienteDto.setNumeroDocumento(deudaClienteEntityList.get(0).getNroDocumento());
-            datosClienteDto.setRazonSocial(deudaClienteEntityList.get(0).getNombreCliente());
-            datosClienteDto.setEmail(deudaClienteEntityList.get(0).getCorreoCliente());
+            datosClienteDto.setCodigoCliente(lstDeudasHistoricas.get(0).getCodigoCliente());
+            datosClienteDto.setNumeroDocumento(lstDeudasHistoricas.get(0).getNroDocumento());
+            datosClienteDto.setRazonSocial(lstDeudasHistoricas.get(0).getNombreCliente());
+            datosClienteDto.setEmail(lstDeudasHistoricas.get(0).getCorreoCliente());
             datosClienteDto.setCodigoTipoDocumentoIdentidad(1);
             List<DetalleFacturaDto> lstDetalleFacturaDto = new ArrayList<>();
-            for (DeudaClienteEntity objDet : deudaClienteEntityList) {
+            for (HistoricoDeudaEntity objDet : lstDeudasHistoricas) {
                 DetalleFacturaDto detalleFacturaDto = new DetalleFacturaDto();
                 detalleFacturaDto.setCodigoProductoSin(objDet.getCodigoProductoSin());
                 detalleFacturaDto.setCodigoProducto(objDet.getCodigoProducto());
@@ -283,7 +374,7 @@ public class ConfirmarPagoQRService {
             }
             InputDto inputDto = new InputDto();
             inputDto.setCliente(datosClienteDto);
-            inputDto.setActividadEconomica(deudaClienteEntityList.get(0).getCodigoActividadEconomica());
+            inputDto.setActividadEconomica(lstDeudasHistoricas.get(0).getCodigoActividadEconomica());
             inputDto.setCodigoMetodoPago(1); // efectivo siempre
             inputDto.setDescuentoAdicional(0F);
             inputDto.setCodigoMoneda(1); // 1 Bs
@@ -305,27 +396,29 @@ public class ConfirmarPagoQRService {
             facturaDto.setEstado("ACTIVO");
             FacturaEntity facturaEntity = iFacturaDao.save(facturaDto);
             System.out.println("Almacena Datos de Factura");
-            for (TransaccionCobroEntity obj : transaccionesCobroList) {
+
+            for (HistoricoDeudaEntity hisDeudas: lstDeudasHistoricas) {
+                Optional<TransaccionCobroEntity> transCobro = iTransaccionCobroDao.findByDeudaClienteIdAndEstado(hisDeudas.getDeudaClienteId(),"CREADO");
+                if(transCobro.isPresent()){
+                    TransaccionCobroEntity obj = transCobro.get();
+                    obj.setFacturaId(facturaEntity.getFacturaId());
+                    //obj.setEstado("UPDATE");
+                    obj.setTransaccion("COBRAR");
+                    iTransaccionCobroDao.save(obj);
+                    System.out.println("Transaccion Cobro Modificado con FactraID");
+                }
+            }
+
+            /*for (TransaccionCobroEntity obj : transaccionesCobroList) {
                 obj.setFacturaId(facturaEntity.getFacturaId());
                 //obj.setEstado("UPDATE");
                 obj.setTransaccion("COBRAR");
                 iTransaccionCobroDao.save(obj);
                 System.out.println("Transaccion Cobro Modificado con FactraID");
-            }
-
-            //Eliminar Deudas Clientes
-            iSitioDeudaClienteDao.deleteAll(deudaClienteEntityList);
-            System.out.println("Eliminar Deudas Clientes");
-
-            response.put("codigo", "0000");
-            response.put("mensaje", "Registro Exitoso");
-            return response;
+            }*/
 
         } catch (Exception ex) {
-            //.. guardar en log
-            System.out.println("error: "+ex.toString());
-            //throw new Technicalexception("Algo salio mal, comuniquese con administrador");
-            throw new Technicalexception(ex.toString());
+           // registrar log
         }
     }
     public ResponseDto generarFacturav2(RequestGeneraFacturaDto requestGeneraFacturaDto) {

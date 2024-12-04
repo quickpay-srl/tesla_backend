@@ -10,6 +10,7 @@ import bo.com.tesla.recaudaciones.dao.ITransaccionCobroDao;
 import bo.com.tesla.useful.dto.ResponseDto;
 import bo.com.tesla.useful.utils.FuncionesFechas;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,12 +28,18 @@ public class QRService {
     private ISitioDatosConfirmadoQrDao iSitioDatosConfirmadoQrDao;
     @Autowired
     private ITransaccionCobroDao iTransaccionCobroDao;
+
+    @Value("${calback.pago.qr}")
+    private String calbackPagoQr;
+
+
+
     public ResponseDto generarQr(RequestGeneraQrDto request) {
         ResponseDto res = new ResponseDto();
         try {
             Map<String, Object> body = new HashMap<>();
             body.put("alias", UUID.randomUUID());
-            body.put("callback", "https://quickpay.com.bo:7080/sip/endpoint/confirmaPago");
+            body.put("callback", calbackPagoQr+"/sip/endpoint/confirmaPago");
             body.put("detalleGlosa", request.getDetalleGlosa());
             body.put("monto", request.getMonto());
             body.put("moneda", request.getMoneda());

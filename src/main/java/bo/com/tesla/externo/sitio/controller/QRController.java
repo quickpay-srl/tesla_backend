@@ -20,6 +20,7 @@ public class QRController {
     @Autowired
     private QRService qrService;
 
+
     @PostMapping("/genera-qr") // genera factura
     public ResponseEntity<?> postCobrarDeudas(@RequestBody RequestGeneraQrDto request) {
         Map<String, Object> response = new HashMap<>();

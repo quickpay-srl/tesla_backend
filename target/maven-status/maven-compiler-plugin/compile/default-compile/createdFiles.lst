@@ -218,8 +218,10 @@ bo\com\tesla\recaudaciones\dao\IAccionDao.class
 bo\com\tesla\recaudaciones\services\CobroClienteService.class
 bo\com\tesla\security\dao\ISegUsuarioDao.class
 bo\com\tesla\externos\recaudaciones\larazon\services\EndPointEntidadService.class
+bo\com\tesla\administracion\entity\LogPagoEntity.class
 bo\com\tesla\administracion\entity\QRGeneradoEntity.class
 bo\com\tesla\administracion\services\ReporteAdminService.class
+bo\com\tesla\pagosv2\dao\ISitioHistoricoDeudasDao.class
 bo\com\tesla\security\controller\MenuController.class
 bo\com\tesla\security\services\ILogSistemaService.class
 bo\com\tesla\administracion\entity\SegTransicionEntityPK.class
@@ -315,6 +317,7 @@ bo\com\tesla\pagos\batch\StepPagosItemReadListener.class
 bo\com\tesla\administracion\entity\EndPointEntidadEntity.class
 bo\com\tesla\recaudaciones\controllers\CobroClienteController.class
 bo\com\tesla\useful\constant\TipoComisionConst.class
+bo\com\tesla\pagosv2\dao\ILogPagoDao.class
 bo\com\tesla\security\dao\ISegPrivilegioRolesDao.class
 bo\com\tesla\administracion\entity\AccionEntity.class
 bo\com\tesla\entidades\dao\IDeudaClienteDao.class

@@ -10,6 +10,7 @@ I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\entity\DeudaClienteEntity.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\entity\CancelacionEntity.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\externo\sitio\dao\ISitioDeudaClienteDao.java
+I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\entity\LogPagoEntity.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\entity\SegPrivilegioEntity.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\entity\PlantillaEntity.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\recaudaciones\dto\EntidadDto.java
@@ -84,6 +85,7 @@ I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\services\IRecaudadorComisionService.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\recaudaciones\services\CobroClienteService.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\useful\cross\HandlingFiles.java
+I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\pagosv2\dao\ISitioHistoricoDeudasDao.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\administracion\dao\IEntidadComisionesDao.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\facturaciones\computarizada\dto\FacturasLstDto.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\recaudaciones\dto\requestGenerarFactura\RequestGeneraFacturaDto.java
@@ -196,6 +198,7 @@ I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\security\dto\CambiarPasswordDto.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\externo\sitio\service\ContactanosService.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\facturacion\electronica\services\RestTemplateFacturacionElectronica.java
+I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\pagosv2\dao\ILogPagoDao.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\recaudaciones\dao\IDominioDao.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\recaudaciones\services\DetalleComprobanteCobroService.java
 I:\PROYECTOS\PERSONALES\QUICKPAY\CODIGO\actuales\tesla_backend\src\main\java\bo\com\tesla\pagos\dao\PTitularPagoDao.java

@@ -62,6 +62,7 @@ public class EntidadController {
     @Autowired
     private IEntidadRecaudadorService entidadRecaudadorService;
 
+    // Registra entidad
     /*********************ABM ENTIDADES**************************/
     @PostMapping("")
     public ResponseEntity<?> addUpdateEntidad(@Valid @RequestBody EntidadAdmDto entidadAdmDto,

@@ -3,6 +3,7 @@ package bo.com.tesla.recaudaciones.controllers;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import bo.com.tesla.administracion.entity.*;
 import bo.com.tesla.entidades.dao.SelectDto;
@@ -296,7 +297,7 @@ public class ReportRecaudacionController {
             usuario = this.segUsuarioService.findByLogin(authentication.getName());
 
 			// si tiene 0 es todas las entidades
-			if(busquedaReportesDto.lstEntidadId.stream().filter(r -> r==0).toList().size()!=0){
+			if(busquedaReportesDto.lstEntidadId.stream().filter(r -> r==0).collect(Collectors.toList()).size()!=0){
 				RecaudadorEntity recaudador = this.recaudadoraService.findRecaudadorByUserId(usuario.getUsuarioId());
 				List<EntidadEntity> entidadList = this.entidadService.findEntidadByRecaudacionId(recaudador.getRecaudadorId());
 				if (entidadList.isEmpty()) {

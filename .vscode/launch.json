@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-TeslaApplication<quickpay-interno>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "bo.com.tesla.TeslaApplication",
+            "projectName": "quickpay-interno",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

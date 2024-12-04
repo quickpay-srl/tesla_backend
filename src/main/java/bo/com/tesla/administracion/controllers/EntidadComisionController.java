@@ -37,6 +37,7 @@ public class EntidadComisionController {
     private ISegUsuarioService segUsuarioService;
 
 
+    // cunado se registra entidad
     /*********************ABM ENTIDADES**************************/
     @PostMapping("")
     public ResponseEntity<?> addUpdateEntidadComision(@RequestBody EntidadComisionAdmDto entidadComisionAdmDto,
